@@ -1,10 +1,18 @@
-const express = require('express');
-const path = require('path');
+import express from 'express';
+import path from 'path';
+import posts from './routes/posts';
+import logger from './middleware/logger.js';
+import errorHandler from './middleware/errorHandler.js';
+import notFound from './middleware/notFound.js';
+
 const port = process.env.PORT || 8000;
 const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 //setup static folder
 
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 // app.get('/', (req, res) => {
 // 	res.send(path.join(__dirname, 'public', 'index.html'));
 // });
@@ -13,24 +21,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 	res.send(path.join(__dirname, 'public', 'about.html'));
 // });
 
-let posts = [
-	{
-		id: 1,
-		title: 'post one',
-	},
-	{
-		id: 2,
-		title: 'post two',
-	},
-	{
-		id: 3,
-		title: 'post three',
-	},
-];
-
-//get ALLL posts
-app.get('/api/posts', (req, res) => {
-	res.json(posts);
-});
-
+//ROUTES
+app.use(logger);
+app.use('/api/posts', posts);
+app.use(notFound);
+app.use(errorHandler);
 app.listen(port, () => console.log(`server running on port ${port}`));
