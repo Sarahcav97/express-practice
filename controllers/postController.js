@@ -52,7 +52,7 @@ const updatePost = (req, res, next) => {
 	post.title = req.body.title;
 	res.status(200).json(posts);
 };
-
+console.log(newPost);
 //desc - delete post
 //DELETE
 const deletePost = (req, res, next) => {
